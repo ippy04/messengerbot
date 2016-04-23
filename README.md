@@ -59,7 +59,9 @@ glide get github.com/ippy04/messengerbot
 	button2 := messengerbot.NewPostbackButton("Button 2", "POSTBACK_BUTTON_2")
 	button3 := messengerbot.NewPostbackButton("Button 3", "POSTBACK_BUTTON_3")
 	element.AddButton(button1, button2, button3)
-
+	
+	msg.AddElement(element)
+	
 	bot.Send(user, msg, messengerbot.NotificationTypeRegular)
 ```
 
