@@ -13,7 +13,7 @@ type MessengerBot struct {
 	Authentication   AuthenticationHandler
 
 	VerifyToken string
-	AppSecret   string // Optional: For validating messagse integrity
+	AppSecret   string // Optional: For validating integrity of messages
 	AccessToken string
 	PageId      string // Optional: For setting welcome message
 	Debug       bool
