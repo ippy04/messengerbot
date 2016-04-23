@@ -1,4 +1,4 @@
-Facebook Messenger Platform (Chatbot) GoLang API
+Facebook Messenger Platform (Chatbot) Go API
 =====
 
 A Golang implementation of the [Facebook Messenger Platform](https://developers.facebook.com/docs/messenger-platform).
