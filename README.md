@@ -34,7 +34,7 @@ glide get github.com/ippy04/messengerbot
 ```
 
 
-### Send an Button Template Message
+### Send an [Button Template](https://developers.facebook.com/docs/messenger-platform/send-api-reference#button_template) Message
 ```go
 	msg := messengerbot.NewButtonTemplate("Pick one, any one")
 	button1 := messengerbot.NewPostbackButton("Button 1", "POSTBACK_BUTTON_1")
@@ -46,7 +46,7 @@ glide get github.com/ippy04/messengerbot
 ```
 
 
-### Send a Generic Template Message
+### Send a [Generic Template](https://developers.facebook.com/docs/messenger-platform/send-api-reference#generic_template) Message
 ```go
 	msg := messengerbot.NewGenericTemplate()
 	element := messengerbot.Element{
