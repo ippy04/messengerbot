@@ -21,8 +21,8 @@ glide get github.com/ippy04/messengerbot
 
 	bot := messengerbot.NewMessengerBot(accessToken, verifyToken)
 	bot.Debug = true
-
-	user := messengerbot.NewUserFromId(979665978736393)
+	
+	user := messengerbot.NewUserFromId(userId)
 	msg := messengerbot.NewMessage("Hello World")
 
 	bot.Send(user, msg, messengerbot.NotificationTypeRegular)
