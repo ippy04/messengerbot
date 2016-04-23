@@ -40,6 +40,7 @@ glide get github.com/ippy04/messengerbot
 	button1 := messengerbot.NewPostbackButton("Button 1", "POSTBACK_BUTTON_1")
 	button2 := messengerbot.NewPostbackButton("Button 2", "POSTBACK_BUTTON_2")
 	button3 := messengerbot.NewPostbackButton("Button 3", "POSTBACK_BUTTON_3")
+	msg.AddButton(button1, button2, button3)
 	
 	bot.Send(user, msg, messengerbot.NotificationTypeRegular)
 ```
@@ -53,6 +54,12 @@ glide get github.com/ippy04/messengerbot
 		ImageUrl: "https://pixabay.com/static/uploads/photo/2016/04/01/09/29/cartoon-1299393_960_720.png",
 		Subtitle: "I am a dinosaur. Hear me Rawr.",
 	}
+	
+	button1 := messengerbot.NewPostbackButton("Button 1", "POSTBACK_BUTTON_1")
+	button2 := messengerbot.NewPostbackButton("Button 2", "POSTBACK_BUTTON_2")
+	button3 := messengerbot.NewPostbackButton("Button 3", "POSTBACK_BUTTON_3")
+	element.AddButton(button1, button2, button3)
+
 	bot.Send(user, msg, messengerbot.NotificationTypeRegular)
 ```
 
