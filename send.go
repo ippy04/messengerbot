@@ -40,7 +40,7 @@ var (
 )
 
 type User struct {
-	Id          int64  `json:"id,omitempty"`
+	Id          string  `json:"id,omitempty"`
 	PhoneNumber string `json:"phone_number,omitempty"`
 }
 
@@ -186,7 +186,7 @@ type SendRequest struct {
 }
 
 type SendResponse struct {
-	RecipientId int64         `json:"recipient_id"`
+	RecipientId string         `json:"recipient_id"`
 	MessageId   string        `json:"message_id"`
 	Error       ErrorResponse `json:"error"`
 }
