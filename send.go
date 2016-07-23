@@ -21,6 +21,7 @@ const (
 const (
 	GraphAPI             = "https://graph.facebook.com/v2.6/"
 	MessengerAPIEndpoint = GraphAPI + "me/messages?access_token=%s"
+	ProfileAPIEndpoint   = GraphAPI + "%d?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=%s"
 
 	GenericTemplateTitleLengthLimit       = 45
 	GenericTemplateSubtitleLengthLimit    = 80
@@ -40,7 +41,7 @@ var (
 )
 
 type User struct {
-	Id          string  `json:"id,omitempty"`
+	Id          string `json:"id,omitempty"`
 	PhoneNumber string `json:"phone_number,omitempty"`
 }
 
@@ -186,7 +187,7 @@ type SendRequest struct {
 }
 
 type SendResponse struct {
-	RecipientId string         `json:"recipient_id"`
+	RecipientId string        `json:"recipient_id"`
 	MessageId   string        `json:"message_id"`
 	Error       ErrorResponse `json:"error"`
 }
@@ -231,6 +232,12 @@ func (bot *MessengerBot) MakeRequest(byt *bytes.Buffer) (*SendResponse, error) {
 	}
 
 	return sendResponse, nil
+}
+
+// convenience method for sending a text-based message
+func (bot *MessengerBot) SendTextMessage(user User, messageText string, notificationType NotificationType) (*SendResponse, error) {
+	message := NewMessage(messageText)
+	return bot.Send(user, message, notificationType)
 }
 
 func (bot *MessengerBot) Send(user User, content interface{}, notificationType NotificationType) (*SendResponse, error) {

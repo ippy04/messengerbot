@@ -1,6 +1,8 @@
 package messengerbot
 
-import "github.com/satori/go.uuid"
+import (
+	"github.com/satori/go.uuid"
+)
 
 func NewUserFromId(id string) User {
 	return User{
