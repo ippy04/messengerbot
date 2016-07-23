@@ -2,7 +2,7 @@ package messengerbot
 
 import "github.com/satori/go.uuid"
 
-func NewUserFromId(id int64) User {
+func NewUserFromId(id string) User {
 	return User{
 		Id: id,
 	}
