@@ -16,7 +16,7 @@ type rawEvent struct {
 
 type Event struct {
 	Id   string `json:"id"`
-	Time int64 `json:"time"`
+	Time int64  `json:"time"`
 }
 
 type MessageEvent struct {
