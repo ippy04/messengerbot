@@ -11,6 +11,7 @@ type MessengerBot struct {
 	MessageDelivered MessageDeliveredHandler
 	Postback         PostbackHandler
 	Authentication   AuthenticationHandler
+	Error				     ErrorHandler
 
 	VerifyToken string
 	AppSecret   string // Optional: For validating integrity of messages

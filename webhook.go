@@ -62,10 +62,11 @@ type MessageOpts struct {
 	Timestamp int64 `json:"timestamp"`
 }
 
-type MessageReceivedHandler func(Event, MessageOpts, ReceivedMessage)
-type MessageDeliveredHandler func(Event, MessageOpts, Delivery)
-type PostbackHandler func(Event, MessageOpts, Postback)
-type AuthenticationHandler func(Event, MessageOpts, *Optin)
+type MessageReceivedHandler func(Event, MessageOpts, ReceivedMessage, chan bool)
+type MessageDeliveredHandler func(Event, MessageOpts, Delivery, chan bool)
+type PostbackHandler func(Event, MessageOpts, Postback, chan bool)
+type AuthenticationHandler func(Event, MessageOpts, *Optin, chan bool)
+type ErrorHandler func(Event, MessageOpts)
 
 // Handler is the main HTTP handler for the Messenger service.
 // It must be attached to some web server in order to receive messages
@@ -111,23 +112,39 @@ func (bot *MessengerBot) handlePOST(rw http.ResponseWriter, req *http.Request) {
 		for _, message := range entry.Messaging {
 			if message.Delivery != nil {
 				if bot.MessageDelivered != nil {
-					go bot.MessageDelivered(entry.Event, message.MessageOpts, *message.Delivery)
+					chHasError := make(chan bool)
+					go bot.MessageDelivered(entry.Event, message.MessageOpts, *message.Delivery, chHasError)
+					bot.handleError(entry.Event, message.MessageOpts, chHasError)
 				}
 			} else if message.Message != nil {
 				if bot.MessageReceived != nil {
-					go bot.MessageReceived(entry.Event, message.MessageOpts, *message.Message)
+					chHasError := make(chan bool)
+					go bot.MessageReceived(entry.Event, message.MessageOpts, *message.Message, chHasError)
+					bot.handleError(entry.Event, message.MessageOpts, chHasError)
 				}
 			} else if message.Postback != nil {
 				if bot.Postback != nil {
-					go bot.Postback(entry.Event, message.MessageOpts, *message.Postback)
+					chHasError := make(chan bool)
+					go bot.Postback(entry.Event, message.MessageOpts, *message.Postback, chHasError)
+					bot.handleError(entry.Event, message.MessageOpts, chHasError)
 				}
 			} else if bot.Authentication != nil {
-				go bot.Authentication(entry.Event, message.MessageOpts, message.Optin)
+				chHasError := make(chan bool)
+				go bot.Authentication(entry.Event, message.MessageOpts, message.Optin, chHasError)
+				bot.handleError(entry.Event, message.MessageOpts, chHasError)
 			}
 		}
 	}
 	rw.WriteHeader(http.StatusOK)
 	rw.Write([]byte(`{"status":"ok"}`))
+}
+
+func (bot *MessengerBot) handleError(event Event, opts MessageOpts, chHasError chan bool) {
+	hasError := <-chHasError
+	close(chHasError)
+	if hasError {
+		go bot.Error(event, opts)
+	}
 }
 
 func checkIntegrity(appSecret string, bytes []byte, expectedSignature string) bool {
