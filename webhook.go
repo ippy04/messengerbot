@@ -35,6 +35,7 @@ type ReceivedMessage struct {
 	Message
 	Id  string `json:"mid"`
 	Seq int    `json:"seq"`
+	Attachments []Attachment `json:"attachments"`
 }
 
 type Delivery struct {
@@ -139,5 +140,10 @@ func checkIntegrity(appSecret string, bytes []byte, expectedSignature string) bo
 	if fmt.Sprintf("%x", mac.Sum(bytes)) != expectedSignature {
 		return false
 	}
+	return true
+}
+
+func (r *ReceivedMessage) IsHaveAttachment() bool {
+	if len(r.Attachment) == 0 return false
 	return true
 }
