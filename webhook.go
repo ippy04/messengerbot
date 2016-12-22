@@ -144,6 +144,6 @@ func checkIntegrity(appSecret string, bytes []byte, expectedSignature string) bo
 }
 
 func (r *ReceivedMessage) IsHaveAttachment() bool {
-	if len(r.Attachment) == 0 return false
+	if len(r.Attachments) == 0 {return false}
 	return true
 }
