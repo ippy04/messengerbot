@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"io/ioutil"
 )
 
 type ctaBase struct {
@@ -16,6 +17,15 @@ type ctaBase struct {
 var welcomeMessage = ctaBase{
 	SettingType: "setting_type",
 	ThreadState: "new_thread",
+}
+
+type Settings struct {
+	SettingType string `json:"setting_type"`
+	Greeting Greeting `json:"greeting"`
+}
+
+type Greeting struct {
+	Text string `json:"text"`
 }
 
 type cta struct {
@@ -64,5 +74,97 @@ func (bot *MessengerBot) SetWelcomeMessage(message *Message) error {
 	if result.Result != "Successfully added new_thread's CTAs" {
 		return errors.New("Something went wrong with setting thread's welcome message, facebook error: " + result.Result)
 	}
+	return nil
+}
+
+// SetWelcomeMessage sets the message that is sent first. If message is nil or empty the welcome message is not sent.
+func (bot *MessengerBot) SetGreeting() error {
+	setting := Settings{
+			SettingType: "greeting",
+			Greeting: Greeting{
+				Text:"Welcome to the bots",
+			},
+	}
+
+	byt, err := json.Marshal(setting)
+	if err != nil {
+		return err
+	}
+	fmt.Print(string(byt))
+
+	url := GraphAPI+"me/thread_settings?access_token="+bot.AccessToken
+	request, err := http.NewRequest("POST", url, bytes.NewReader(byt))
+	fmt.Print(url)
+	request.Header.Set("Content-Type", "application/json")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	response, err := bot.Client.Do(request)
+	if response != nil {
+		defer response.Body.Close()
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if response.StatusCode != http.StatusOK {
+		return errors.New("Invalid status code")
+	}
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+  fmt.Println("response Body:", string(body))
+
+	return nil
+}
+
+// SetWelcomeMessage sets the message that is sent first. If message is nil or empty the welcome message is not sent.
+func (bot *MessengerBot) SetGetstarted() error {
+	str := `
+	{
+	  "setting_type":"call_to_actions",
+	  "thread_state":"new_thread",
+	  "call_to_actions":[
+	    {
+	      "payload":"GetStarted"
+	    }
+	  ]
+	}
+	`
+
+	byt := []byte(str)
+	fmt.Print(string(byt))
+
+	url := GraphAPI+"me/thread_settings?access_token="+bot.AccessToken
+	request, err := http.NewRequest("POST", url, bytes.NewReader(byt))
+	fmt.Print(url)
+	request.Header.Set("Content-Type", "application/json")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	response, err := bot.Client.Do(request)
+	if response != nil {
+		defer response.Body.Close()
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if response.StatusCode != http.StatusOK {
+		return errors.New("Invalid status code")
+	}
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+  fmt.Println("response Body:", string(body))
+
 	return nil
 }
