@@ -21,7 +21,7 @@ const (
 const (
 	GraphAPI             = "https://graph.facebook.com/v2.6/"
 	MessengerAPIEndpoint = GraphAPI + "me/messages?access_token=%s"
-	ProfileAPIEndpoint   = GraphAPI + "%d?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=%s"
+	ProfileAPIEndpoint   = GraphAPI + "%s?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=%s"
 
 	GenericTemplateTitleLengthLimit       = 45
 	GenericTemplateSubtitleLengthLimit    = 80
